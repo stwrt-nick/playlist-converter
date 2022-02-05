@@ -1,39 +1,53 @@
 package main
 
 import (
-	"io"
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
-
-	httptransport "github.com/go-kit/kit/transport/http"
+	"os"
+	"os/signal"
+	"playlist-converter/base"
+	"syscall"
 )
 
 func main() {
 
-	svc := Service{}
-	// Hello world, the web server
+	var (
+		httpAddr = flag.String("http.addr", ":8080", "HTTP listen address")
+	)
+	flag.Parse()
 
-	helloHandler := func(w http.ResponseWriter, req *http.Request) {
-		io.WriteString(w, "Hello, world!\n")
+	var logger log.Logger
+	{
+		logger = log.NewLogfmtLogger(os.Stderr)
+		logger = log.With(logger, "ts", log.DefaultTimestampUTC)
+		logger = log.With(logger, "caller", log.DefaultCaller)
 	}
 
-	convertAppleToSpotifyHandler := httptransport.NewServer(
-		makeConvertAppleToSpotifyEndpoint(svc),
-		decodeUppercaseRequest,
-		encodeResponse,
-	)
+	var s base.Service
+	{
+		s = base.NewInmemService()
+		s = base.LoggingMiddleware(logger)(s)
+	}
 
-	convertSpotifyToAppleHandler := httptransport.NewServer(
-		makeConvertSpotifyToAppleEndpoint(svc),
-		decodeCountRequest,
-		encodeResponse,
-	)
+	var h http.Handler
+	{
+		h = base.MakeHTTPHandler(s, log.With(logger, "component", "HTTP"))
+	}
 
-	http.Handle("/uppercase", uppercaseHandler)
-	http.Handle("/count", countHandler)
+	errs := make(chan error)
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+		errs <- fmt.Errorf("%s", <-c)
+	}()
 
-	http.HandleFunc("/hello", helloHandler)
-	log.Println("Listing for requests at http://localhost:8080/hello")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	go func() {
+		logger.Log("transport", "HTTP", "addr", *httpAddr)
+		errs <- http.ListenAndServe(*httpAddr, h)
+	}()
+
+	logger.Log("exit", <-errs)
 
 }
