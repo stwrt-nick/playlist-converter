@@ -1,10 +1,15 @@
 package base
 
+import (
+	"context"
+)
+
 type service struct{}
 
 type Service interface {
-	ConvertSpotifyToApple(string) string
-	ConvertAppleToSpotify(string) string
+	ConvertSpotifyToApple(ctx context.Context, req string) (string, error)
+	ConvertAppleToSpotify(ctx context.Context, req string) (string, error)
+	GetSpotifyAuthToken()
 }
 
 func ConvertSpotifyToApple(string) string {
