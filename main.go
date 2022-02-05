@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"playlist-converter/base"
 	"syscall"
+
+	"github.com/go-kit/kit/log"
 )
 
 func main() {
@@ -27,7 +28,6 @@ func main() {
 
 	var s base.Service
 	{
-		s = base.NewInmemService()
 		s = base.LoggingMiddleware(logger)(s)
 	}
 

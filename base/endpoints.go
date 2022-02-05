@@ -14,10 +14,10 @@ type Endpoints struct {
 	ConvertAppleToSpotifyEndpoint endpoint.Endpoint
 }
 
-func MakeServerEndpoints(ctx context.Context, s Service) Endpoints {
+func MakeServerEndpoints(s Service) Endpoints {
 	return Endpoints{
-		ConvertSpotifyToAppleEndpoint: makeConvertSpotifyToAppleEndpoint(ctx, s),
-		ConvertAppleToSpotifyEndpoint: makeConvertAppleToSpotifyEndpoint(ctx, s),
+		ConvertSpotifyToAppleEndpoint: makeConvertSpotifyToAppleEndpoint(s),
+		ConvertAppleToSpotifyEndpoint: makeConvertAppleToSpotifyEndpoint(s),
 	}
 }
 
@@ -56,24 +56,18 @@ func (e Endpoints) ConvertSpotifyToApple(ctx context.Context, id string) (conver
 	}, nil
 }
 
-func makeConvertSpotifyToAppleEndpoint(ctx context.Context, s Service) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
+func makeConvertSpotifyToAppleEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(convertSpotifyToAppleRequest)
-		v, err := s.ConvertSpotifyToApple(ctx, req.id)
-		if err != nil {
-			return convertSpotifyToAppleResponse{v, err.Error()}, nil
-		}
-		return convertSpotifyToAppleResponse{v, ""}, nil
+		p, e := s.ConvertSpotifyToApple(ctx, req.id)
+		return convertSpotifyToAppleResponse{status: p, err: e}, nil
 	}
 }
 
-func makeConvertAppleToSpotifyEndpoint(ctx context.Context, s Service) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
+func makeConvertAppleToSpotifyEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(convertAppleToSpotifyRequest)
-		v, err := s.ConvertAppleToSpotify(ctx, req.id)
-		if err != nil {
-			return convertAppleToSpotifyResponse{v, err.Error()}, nil
-		}
-		return convertAppleToSpotifyResponse{v, ""}, nil
+		p, e := s.ConvertAppleToSpotify(ctx, req.id)
+		return convertAppleToSpotifyResponse{status: p, err: e}, nil
 	}
 }

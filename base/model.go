@@ -6,7 +6,7 @@ type convertSpotifyToAppleRequest struct {
 
 type convertSpotifyToAppleResponse struct {
 	status string `json:"status"`
-	err    string `json:"err,omitempty"` // errors don't JSON-marshal, so we use a string
+	err    error  `json:"err,omitempty"` // errors don't JSON-marshal, so we use a string
 }
 
 type convertAppleToSpotifyRequest struct {
@@ -14,8 +14,8 @@ type convertAppleToSpotifyRequest struct {
 }
 
 type convertAppleToSpotifyResponse struct {
-	V   string `json:"v"`
-	Err string `json:"err,omitempty"` // errors don't JSON-marshal, so we use a string
+	status string `json:"status"`
+	err    error  `json:"err,omitempty"` // errors don't JSON-marshal, so we use a string
 }
 
 type SpotifyPlaylistResponse struct {
