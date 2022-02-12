@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 )
 
 // Middleware describes a service (as opposed to endpoint) middleware.
@@ -24,22 +24,29 @@ type loggingMiddleware struct {
 	logger log.Logger
 }
 
-func (mw loggingMiddleware) ConvertAppleToSpotify(ctx context.Context, userID string) (res string, err error) {
+func (mw loggingMiddleware) ConvertAppleToSpotify(ctx context.Context, req convertAppleToSpotifyRequest) (res convertAppleToSpotifyResponse, err error) {
 	defer func(begin time.Time) {
-		mw.logger.Log("method", "convertAppleToSpotify", "id", userID, "took", time.Since(begin), "err", err)
+		mw.logger.Log("method", "convertAppleToSpotify", "id", req.Id, "took", time.Since(begin), "err", err)
 	}(time.Now())
-	return mw.next.ConvertAppleToSpotify(ctx, userID)
+	return mw.next.ConvertAppleToSpotify(ctx, req)
 }
 
-func (mw loggingMiddleware) ConvertSpotifyToApple(ctx context.Context, userID string) (res string, err error) {
+func (mw loggingMiddleware) ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error) {
 	defer func(begin time.Time) {
-		mw.logger.Log("method", "convertSpotifyToApple", "id", userID, "took", time.Since(begin), "err", err)
+		mw.logger.Log("method", "convertSpotifyToApple", "id", req.Id, "took", time.Since(begin), "err", err)
 	}(time.Now())
-	return mw.next.ConvertSpotifyToApple(ctx, userID)
+	return mw.next.ConvertSpotifyToApple(ctx, req)
 }
 
-func (mw loggingMiddleware) GetSpotifyAuthToken() {
-	defer func(begin time.Time) {
-		mw.logger.Log("method", "convertAppleToSpotify", "took", time.Since(begin))
-	}(time.Now())
-}
+// func (mw loggingMiddleware) GetUsersPlaylistsSpotify(ctx context.Context, userID string) (res GetUsersPlaylistsSpotifyResponse, err error) {
+// 	defer func(begin time.Time) {
+// 		mw.logger.Log("method", "getUsersPlaylistsSpotify", "id", userID, "took", time.Since(begin), "err", err)
+// 	}(time.Now())
+// 	return mw.next.GetUsersPlaylistsSpotify(ctx, userID)
+// }
+
+// func (mw loggingMiddleware) GetSpotifyAuthToken() {
+// 	defer func(begin time.Time) {
+// 		mw.logger.Log("method", "convertAppleToSpotify", "took", time.Since(begin))
+// 	}(time.Now())
+// }

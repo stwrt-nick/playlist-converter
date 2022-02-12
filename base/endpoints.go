@@ -43,31 +43,31 @@ func MakeClientEndpoints(instance string) (Endpoints, error) {
 	}, nil
 }
 
-func (e Endpoints) ConvertSpotifyToApple(ctx context.Context, id string) (convertSpotifyToAppleResponse, error) {
-	request := convertAppleToSpotifyRequest{id: id}
+func (e Endpoints) ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error) {
+	request := convertAppleToSpotifyRequest{Id: req.Id}
 	response, err := e.ConvertSpotifyToAppleEndpoint(ctx, request)
 	if err != nil {
 		return convertSpotifyToAppleResponse{}, err
 	}
 	resp := response.(convertSpotifyToAppleResponse)
 	return convertSpotifyToAppleResponse{
-		status: resp.status,
-		err:    resp.err,
+		Status: resp.Status,
+		Err:    resp.Err,
 	}, nil
 }
 
 func makeConvertSpotifyToAppleEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(convertSpotifyToAppleRequest)
-		p, e := s.ConvertSpotifyToApple(ctx, req.id)
-		return convertSpotifyToAppleResponse{status: p, err: e}, nil
+		p, e := s.ConvertSpotifyToApple(ctx, req)
+		return convertSpotifyToAppleResponse{Status: p.Status, Err: e}, nil
 	}
 }
 
 func makeConvertAppleToSpotifyEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(convertAppleToSpotifyRequest)
-		p, e := s.ConvertAppleToSpotify(ctx, req.id)
-		return convertAppleToSpotifyResponse{status: p, err: e}, nil
+		p, e := s.ConvertAppleToSpotify(ctx, req)
+		return convertAppleToSpotifyResponse{Status: p.Status, Err: e}, nil
 	}
 }

@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-
 	var (
 		httpAddr = flag.String("http.addr", ":8080", "HTTP listen address")
 	)
@@ -28,6 +27,7 @@ func main() {
 
 	var s base.Service
 	{
+		s = base.NewBaseService()
 		s = base.LoggingMiddleware(logger)(s)
 	}
 
@@ -49,5 +49,4 @@ func main() {
 	}()
 
 	logger.Log("exit", <-errs)
-
 }

@@ -1,7 +1,5 @@
 package base
 
-// The profilesvc is just over HTTP, so we just have a single transport.go.
-
 import (
 	"bytes"
 	"context"
@@ -24,10 +22,9 @@ var (
 )
 
 // MakeHTTPHandler mounts all of the service endpoints into an http.Handler.
-// Useful in a profilesvc server.
-func MakeHTTPHandler(ctx context.Context, s Service, logger log.Logger) http.Handler {
+func MakeHTTPHandler(s Service, logger log.Logger) http.Handler {
 	r := mux.NewRouter()
-	e := MakeServerEndpoints(ctx, s)
+	e := MakeServerEndpoints(s)
 	options := []httptransport.ServerOption{
 		httptransport.ServerErrorHandler(transport.NewLogErrorHandler(logger)),
 		httptransport.ServerErrorEncoder(encodeError),
