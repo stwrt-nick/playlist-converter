@@ -9,10 +9,11 @@ import (
 	"playlist-converter/base"
 	"syscall"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 )
 
 func main() {
+
 	var (
 		httpAddr = flag.String("http.addr", ":8080", "HTTP listen address")
 	)

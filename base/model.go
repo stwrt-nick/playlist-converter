@@ -37,3 +37,9 @@ type GetUsersPlaylistsSpotifyResponse struct {
 	Previous string   `json:"previous"`
 	Total    int      `json:"total"`
 }
+
+type OAuthAccessResponse struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+	ExpiresIn   int    `json:"expires_in"`
+}

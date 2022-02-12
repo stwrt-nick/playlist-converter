@@ -1,0 +1,11 @@
+TODO
+
+In Spotify
+# get users playlists
+# get playlist id
+# get tracks by playlist id 
+
+In Apple
+# post tracks to playlist
+# name playlist
+# add playlist artworK?

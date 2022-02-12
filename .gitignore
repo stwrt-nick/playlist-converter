@@ -1,0 +1,5 @@
+# Removes all .env files
+*.env
+
+# In case you're in mac OS
+.DS_Store
