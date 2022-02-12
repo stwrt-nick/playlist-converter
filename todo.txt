@@ -1,5 +1,7 @@
 TODO
 
+# get Spotify Auth Token -- DONE
+
 In Spotify
 # get users playlists
 # get playlist id

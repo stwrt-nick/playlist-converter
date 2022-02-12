@@ -3,7 +3,7 @@ package base
 import (
 	"context"
 	"errors"
-	"playlist-converter/api"
+
 	"sync"
 )
 
@@ -31,7 +31,10 @@ func NewBaseService() Service {
 
 func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error) {
 
-	authToken, err := api.GetSpotifyAuthToken()
+	authToken, err := GetSpotifyAuthToken()
+	if err != nil {
+		return res, err
+	}
 
 	if req.Id != "" {
 		res = convertSpotifyToAppleResponse{

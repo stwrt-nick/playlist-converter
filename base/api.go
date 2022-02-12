@@ -1,12 +1,14 @@
-package api
+package base
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
+
 	"strings"
 	"time"
 
@@ -59,7 +61,12 @@ func GetSpotifyAuthToken() (token string, err error) {
 		return token, err
 	}
 
-	response := string(body)
+	var authResponse SpotifyOAuthResponse
 
-	return response, err
+	unmarshalErr := json.Unmarshal(body, &authResponse)
+	if unmarshalErr != nil {
+		panic(err)
+	}
+
+	return authResponse.AccessToken, err
 }
