@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -13,6 +14,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
+	"github.com/tidwall/gjson"
 )
 
 var (
@@ -69,4 +71,42 @@ func GetSpotifyAuthToken() (token string, err error) {
 	}
 
 	return authResponse.AccessToken, err
+}
+
+func GetUsersPlaylistsSpotify(authToken string, userId string) (playlistId string, err error) {
+
+	timeout := time.Duration(5 * time.Second)
+	client := http.Client{
+		Timeout: timeout,
+	}
+
+	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/users/"+userId+"/playlists", nil)
+	req.Header.Set("Authorization", "Bearer "+authToken)
+	req.Header.Set("Content-Type", "application/json")
+	if err != nil {
+		return playlistId, err
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return playlistId, err
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return playlistId, err
+	}
+
+	bodyString := string(body)
+
+	stripSlash := strings.Replace(bodyString, "\\", "", -1)
+
+	value := gjson.Get(stripSlash, "items.followers.id")
+	playlistId = value.String()
+
+	fmt.Println(playlistId)
+
+	return playlistId, err
 }

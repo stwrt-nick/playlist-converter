@@ -35,10 +35,14 @@ func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpot
 	if err != nil {
 		return res, err
 	}
+	playlistId, err := GetUsersPlaylistsSpotify(authToken, req.Id)
+	if err != nil {
+		return res, err
+	}
 
 	if req.Id != "" {
 		res = convertSpotifyToAppleResponse{
-			Status: authToken,
+			Status: playlistId,
 			Err:    nil,
 		}
 	}
