@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -14,7 +13,6 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/tidwall/gjson"
 )
 
 var (
@@ -99,14 +97,14 @@ func GetUsersPlaylistsSpotify(authToken string, userId string) (playlistId strin
 		return playlistId, err
 	}
 
-	bodyString := string(body)
+	var playlistResponse SpotifyPlaylistResponse
 
-	stripSlash := strings.Replace(bodyString, "\\", "", -1)
+	unmarshalErr := json.Unmarshal(body, &playlistResponse)
+	if unmarshalErr != nil {
 
-	value := gjson.Get(stripSlash, "items.followers.id")
-	playlistId = value.String()
+	}
 
-	fmt.Println(playlistId)
+	playlistId = playlistResponse.Items[0].Id
 
 	return playlistId, err
 }

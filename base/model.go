@@ -19,13 +19,13 @@ type convertAppleToSpotifyResponse struct {
 }
 
 type SpotifyPlaylistResponse struct {
-	Href     string   `json:"href"`
-	Items    Playlist `json:"items"`
-	Limit    int      `json:"limit"`
-	Next     string   `json:"next"`
-	Offset   int      `json:"offset"`
-	Previous string   `json:"previous"`
-	Total    int      `json:"total"`
+	Href     string     `json:"href"`
+	Items    []Playlist `json:"items"`
+	Limit    int        `json:"limit"`
+	Next     string     `json:"next"`
+	Offset   int        `json:"offset"`
+	Previous string     `json:"previous"`
+	Total    int        `json:"total"`
 }
 
 type GetUsersPlaylistsSpotifyResponse struct {
@@ -49,12 +49,14 @@ type Playlist struct {
 	Description   string       `json:"description"`
 	ExternalUrls  ExternalUrls `json:"external_urls"`
 	Followers     Followers    `json:"followers"`
-	Images        Images       `json:"images"`
+	Href          string       `json:"href"`
+	Id            string       `json:"id"`
+	Images        []Images     `json:"images"`
 	Name          string       `json:"name"`
 	Owner         Owner        `json:"owner"`
 	Public        bool         `json:"public"`
 	SnapshotId    string       `json:"snapshot_id"`
-	Tracks        Tracks       `json:"tracks"`
+	Tracks        []Tracks     `json:"tracks"`
 	Type          string       `json:"type"`
 	URI           string       `json:"uri"`
 }
@@ -64,8 +66,8 @@ type ExternalUrls struct {
 }
 
 type Followers struct {
-	Href string `json:"href"`
-	Id   string `json:"id"`
+	Href  string `json:"href"`
+	Total int    `json:"total"`
 }
 
 type Images struct {
@@ -86,7 +88,7 @@ type Owner struct {
 
 type Tracks struct {
 	Href     string `json:"href"`
-	Items    Track  `json:"items"`
+	Items    []Track  `json:"items"`
 	Limit    int    `json:"limit"`
 	Next     string `json:"next"`
 	Offset   int    `json:"offset"`
