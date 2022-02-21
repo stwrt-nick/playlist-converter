@@ -1,7 +1,8 @@
 package base
 
 type convertSpotifyToAppleRequest struct {
-	Id string `json:"id"`
+	Id           string `json:"id"`
+	PlaylistName string `json:"playlistName"`
 }
 
 type convertSpotifyToAppleResponse struct {
@@ -87,13 +88,13 @@ type Owner struct {
 }
 
 type Tracks struct {
-	Href     string `json:"href"`
-	Items    []Track  `json:"items"`
-	Limit    int    `json:"limit"`
-	Next     string `json:"next"`
-	Offset   int    `json:"offset"`
-	Previous string `json:"previous"`
-	Total    int    `json:"total"`
+	Href     string  `json:"href"`
+	Items    []Track `json:"items"`
+	Limit    int     `json:"limit"`
+	Next     string  `json:"next"`
+	Offset   int     `json:"offset"`
+	Previous string  `json:"previous"`
+	Total    int     `json:"total"`
 }
 
 type Track struct {
@@ -108,6 +109,8 @@ type Track struct {
 	Id               string       `json:"id"`
 	IsPlayable       bool         `json:"is_playable"`
 	LinkedFrom       LinkedFrom   `json:"linked_from"`
+	Restrictions     Restrictions `json:"restrictions"`
+	Name             string       `json:"name"`
 }
 
 type Album struct {

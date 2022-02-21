@@ -30,19 +30,19 @@ func NewBaseService() Service {
 }
 
 func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error) {
-
+	GetAppleAuthToken()
 	authToken, err := GetSpotifyAuthToken()
 	if err != nil {
 		return res, err
 	}
-	playlistId, err := GetUsersPlaylistsSpotify(authToken, req.Id)
+	playlistTracks, err := GetPlaylistTracksSpotify(authToken, req.Id, req.PlaylistName)
 	if err != nil {
 		return res, err
 	}
 
-	if req.Id != "" {
+	if playlistTracks != nil {
 		res = convertSpotifyToAppleResponse{
-			Status: playlistId,
+			Status: playlistTracks[10],
 			Err:    nil,
 		}
 	}

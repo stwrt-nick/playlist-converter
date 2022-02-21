@@ -71,7 +71,7 @@ func GetSpotifyAuthToken() (token string, err error) {
 	return authResponse.AccessToken, err
 }
 
-func GetUsersPlaylistsSpotify(authToken string, userId string) (playlistId string, err error) {
+func GetPlaylistTracksSpotify(authToken string, userId string, playlistName string) (playlistTracks []string, err error) {
 
 	timeout := time.Duration(5 * time.Second)
 	client := http.Client{
@@ -82,19 +82,19 @@ func GetUsersPlaylistsSpotify(authToken string, userId string) (playlistId strin
 	req.Header.Set("Authorization", "Bearer "+authToken)
 	req.Header.Set("Content-Type", "application/json")
 	if err != nil {
-		return playlistId, err
+		return playlistTracks, err
 	}
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return playlistId, err
+		return playlistTracks, err
 	}
 
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return playlistId, err
+		return playlistTracks, err
 	}
 
 	var playlistResponse SpotifyPlaylistResponse
@@ -104,7 +104,17 @@ func GetUsersPlaylistsSpotify(authToken string, userId string) (playlistId strin
 
 	}
 
-	playlistId = playlistResponse.Items[0].Id
+	for playlistCount := range playlistResponse.Items {
+		if currentPlaylist := playlistResponse.Items[playlistCount]; currentPlaylist.Name == playlistName {
+			for trackNumber, tracks := range currentPlaylist.Tracks {
+				playlistTracks = append(playlistTracks, tracks.Items[trackNumber].Name)
+			}
+		}
+	}
 
-	return playlistId, err
+	return playlistTracks, err
+}
+
+func GetAppleAuthToken() {
+
 }

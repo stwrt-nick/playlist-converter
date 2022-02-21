@@ -3,8 +3,8 @@ TODO
 # get Spotify Auth Token -- DONE
 
 In Spotify
-# get users playlists
-# get playlist id
+# get users playlists -- DONE
+# get playlist id by playlist name & user name -- DONE
 # get tracks by playlist id 
 
 In Apple
