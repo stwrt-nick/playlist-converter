@@ -3,6 +3,7 @@ package base
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"sync"
 )
@@ -30,19 +31,29 @@ func NewBaseService() Service {
 }
 
 func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error) {
-	GetAppleAuthToken()
 	authToken, err := GetSpotifyAuthToken()
 	if err != nil {
 		return res, err
 	}
-	playlistTracks, err := GetPlaylistTracksSpotify(authToken, req.Id, req.PlaylistName)
+	playlistId, err := GetPlaylistIdSpotify(authToken, req.Id, req.PlaylistName)
 	if err != nil {
 		return res, err
 	}
 
-	if playlistTracks != nil {
+	playlistTracks, err := GetPlaylistTracksSpotify(authToken, playlistId)
+	if err != nil {
+		return res, err
+	}
+
+	i := 0
+	for i < len(playlistTracks) {
+		fmt.Println(playlistTracks[i])
+		i++
+	}
+
+	if playlistId != "" {
 		res = convertSpotifyToAppleResponse{
-			Status: playlistTracks[10],
+			Status: playlistId,
 			Err:    nil,
 		}
 	}

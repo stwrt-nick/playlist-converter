@@ -57,7 +57,7 @@ type Playlist struct {
 	Owner         Owner        `json:"owner"`
 	Public        bool         `json:"public"`
 	SnapshotId    string       `json:"snapshot_id"`
-	Tracks        []Tracks     `json:"tracks"`
+	Tracks        Tracks       `json:"tracks"`
 	Type          string       `json:"type"`
 	URI           string       `json:"uri"`
 }
@@ -99,6 +99,7 @@ type Tracks struct {
 
 type Track struct {
 	Album            Album        `json:"album"`
+	Artists          Artists      `json:"artists"`
 	AvailableMarkets []string     `json:"available_markets"`
 	DiscNumber       int          `json:"disc_number"`
 	DurationMs       int          `json:"duration_ms"`
@@ -111,6 +112,12 @@ type Track struct {
 	LinkedFrom       LinkedFrom   `json:"linked_from"`
 	Restrictions     Restrictions `json:"restrictions"`
 	Name             string       `json:"name"`
+	Popularity       int          `json:"popularity"`
+	PreviewUrl       string       `json:"preview_url"`
+	TrackNumber      int          `json:"track_number"`
+	Type             string       `json:"type"`
+	Uri              string       `json:"uri"`
+	IsLocal          bool         `json:"is_local"`
 }
 
 type Album struct {
@@ -155,4 +162,35 @@ type ExternalIds struct {
 }
 
 type LinkedFrom struct {
+}
+
+type GetPlaylistItems struct {
+	Href     string          `json:"href"`
+	Items    []PlaylistItems `json:"items"`
+	Limit    int             `json:"limit"`
+	Next     string          `json:"next"`
+	Offset   int             `json:"offset"`
+	Previous string          `json:"previous"`
+	Total    int             `json:"total"`
+}
+
+type PlaylistItems struct {
+	AddedAt        string         `json:"added_at"`
+	AddedBy        AddedBy        `json:"added_by"`
+	IsLocal        bool           `json:"is_local"`
+	PrimaryColor   string         `json:"primary_color"`
+	Track          Track          `json:"track"`
+	VideoThumbnail VideoThumbnail `json:"video_thumbnail"`
+}
+
+type AddedBy struct {
+	ExternalUrls ExternalUrls `json:"external_urls"`
+	Href         string       `json:"href"`
+	Id           string       `json:"id"`
+	Type         string       `json:"type"`
+	URI          string       `json:"uri"`
+}
+
+type VideoThumbnail struct {
+	Url string `json:"url"`
 }
