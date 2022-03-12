@@ -12,6 +12,7 @@ import (
 type Endpoints struct {
 	ConvertSpotifyToAppleEndpoint endpoint.Endpoint
 	ConvertAppleToSpotifyEndpoint endpoint.Endpoint
+	GetAppleJWTTokenEndpoint      endpoint.Endpoint
 }
 
 func MakeServerEndpoints(s Service) Endpoints {
@@ -69,5 +70,12 @@ func makeConvertAppleToSpotifyEndpoint(s Service) endpoint.Endpoint {
 		req := request.(convertAppleToSpotifyRequest)
 		p, e := s.ConvertAppleToSpotify(ctx, req)
 		return convertAppleToSpotifyResponse{Status: p.Status, Err: e}, nil
+	}
+}
+
+func makeGetAppleJWTTokenEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		p, e := s.GetAppleJWTToken(ctx)
+		return AppleJWTTokenResponse{JWTToken: p.JWTToken, Err: e}, nil
 	}
 }

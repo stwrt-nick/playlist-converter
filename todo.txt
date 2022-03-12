@@ -8,6 +8,7 @@ In Spotify
 # get tracks by playlist id 
 
 In Apple
+# get JWT Token
 # post tracks to playlist
 # name playlist
 # add playlist artworK?

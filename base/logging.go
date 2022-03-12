@@ -38,6 +38,13 @@ func (mw loggingMiddleware) ConvertSpotifyToApple(ctx context.Context, req conve
 	return mw.next.ConvertSpotifyToApple(ctx, req)
 }
 
+func (mw loggingMiddleware) GetAppleJWTToken(ctx context.Context) (res AppleJWTTokenResponse, err error) {
+	defer func(begin time.Time) {
+		mw.logger.Log("method", "getAppleJWTToken", "took", time.Since(begin), "err", err)
+	}(time.Now())
+	return mw.next.GetAppleJWTToken(ctx)
+}
+
 // func (mw loggingMiddleware) GetUsersPlaylistsSpotify(ctx context.Context, userID string) (res GetUsersPlaylistsSpotifyResponse, err error) {
 // 	defer func(begin time.Time) {
 // 		mw.logger.Log("method", "getUsersPlaylistsSpotify", "id", userID, "took", time.Since(begin), "err", err)

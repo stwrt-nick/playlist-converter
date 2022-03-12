@@ -12,8 +12,6 @@ github.com/go-logfmt/logfmt
 # github.com/golang-jwt/jwt v3.2.1+incompatible
 ## explicit
 github.com/golang-jwt/jwt
-# github.com/google/go-querystring v1.0.0
-## explicit
 # github.com/gorilla/mux v1.8.0
 ## explicit; go 1.12
 github.com/gorilla/mux
@@ -23,9 +21,3 @@ github.com/joho/godotenv
 # github.com/minchao/go-apple-music v0.0.0-20210727003702-cefe2063f418
 ## explicit; go 1.13
 github.com/minchao/go-apple-music/token
-# github.com/tidwall/gjson v1.14.0
-## explicit; go 1.12
-# github.com/tidwall/match v1.1.1
-## explicit; go 1.15
-# github.com/tidwall/pretty v1.2.0
-## explicit; go 1.16

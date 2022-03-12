@@ -45,6 +45,13 @@ func MakeHTTPHandler(s Service, logger log.Logger) http.Handler {
 		encodeResponse,
 		options...,
 	))
+	r.Methods("GET").Path("/getAppleJWTToken").Handler(httptransport.NewServer(
+		e.GetAppleJWTTokenEndpoint,
+		decodeGetAppleJWTTokenRequest,
+		encodeResponse,
+		options...,
+	))
+
 	return r
 }
 
@@ -80,6 +87,14 @@ func decodeConvertAppleToSpotifyResponse(_ context.Context, resp *http.Response)
 	var response convertAppleToSpotifyResponse
 	err := json.NewDecoder(resp.Body).Decode(&response)
 	return response, err
+}
+
+func decodeGetAppleJWTTokenRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request AppleJWTTokenResponse
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return nil, err
+	}
+	return request, nil
 }
 
 func decodeConvertSpotifyToAppleResponse(_ context.Context, resp *http.Response) (interface{}, error) {

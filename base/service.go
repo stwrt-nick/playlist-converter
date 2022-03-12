@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 
 	"sync"
 )
@@ -14,6 +15,7 @@ type Service interface {
 	ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error)
 	// GetUsersPlaylistsSpotify(ctx context.Context, userID string) (res GetUsersPlaylistsSpotifyResponse, err error)
 	ConvertAppleToSpotify(ctx context.Context, req convertAppleToSpotifyRequest) (res convertAppleToSpotifyResponse, err error)
+	GetAppleJWTToken(ctx context.Context) (res AppleJWTTokenResponse, err error)
 }
 
 var (
@@ -70,4 +72,16 @@ func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpot
 
 func (s *baseService) ConvertAppleToSpotify(ctx context.Context, req convertAppleToSpotifyRequest) (res convertAppleToSpotifyResponse, err error) {
 	return res, nil
+}
+
+func (s *baseService) GetAppleJWTToken(ctx context.Context) (res AppleJWTTokenResponse, err error) {
+	privateKey, err := privateKeyFromFile()
+	if err != nil {
+		log.Fatal(err)
+	}
+	authToken, err := GenerateAuthToken(privateKey)
+
+	res.JWTToken = authToken
+
+	return res, err
 }

@@ -1,10 +1,14 @@
 package base
 
 import (
+	"crypto/ecdsa"
+	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
+	"encoding/pem"
 	"errors"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -12,6 +16,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/joho/godotenv"
 )
 
@@ -151,4 +156,104 @@ func GetPlaylistTracksSpotify(authToken string, playlistId string) (playlistTrac
 	}
 
 	return playlistTracks, err
+}
+
+func privateKeyFromFile() (*ecdsa.PrivateKey, error) {
+	keyFile := os.Getenv("KEY_FILE")
+
+	bytes, err := ioutil.ReadFile(keyFile)
+	if err != nil {
+		return nil, err
+	}
+
+	block, _ := pem.Decode(bytes)
+	if block == nil {
+		return nil, errors.New("AuthKey must be a valid .p8 PEM file")
+	}
+	key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+	if err != nil {
+		return nil, err
+	}
+
+	switch pk := key.(type) {
+	case *ecdsa.PrivateKey:
+		return pk, nil
+	default:
+		return nil, errors.New("AuthKey must be of type ecdsa.PrivateKey")
+	}
+
+}
+
+func GenerateAuthToken(privateKey *ecdsa.PrivateKey) (string, error) {
+	issuerID := os.Getenv("ISSUER_ID")
+	keyID := os.Getenv("KEY_ID")
+
+	expirationTimestamp := time.Now().Add(15 * time.Minute)
+	now := time.Now()
+
+	token := jwt.NewWithClaims(jwt.SigningMethodES256, jwt.MapClaims{
+		"iss": issuerID,
+		"iat": now.Unix(),
+		"exp": expirationTimestamp.Unix(),
+	})
+
+	token.Header["alg"] = "ES256"
+	token.Header["kid"] = keyID
+
+	tokenString, err := token.SignedString(privateKey)
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
+
+}
+
+func GetAppleSong() (song string, err error) {
+	privateKey, err := privateKeyFromFile()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	authToken, err := GenerateAuthToken(privateKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	client := &http.Client{}
+
+	qs := url.Values{}
+
+	req, err := http.NewRequest(
+		http.MethodGet,
+		"https://api.appstoreconnect.apple.com/v1/builds?"+qs.Encode(),
+		nil,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req.Header.Set("Authorization", "Bearer "+authToken)
+	req.Header.Set("User-Agent", "App Store Connect Client")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var applePlaylistResponse ApplePlaylistResponse
+
+	unmarshalErr := json.Unmarshal(body, &applePlaylistResponse)
+	if unmarshalErr != nil {
+		panic(err)
+	}
+
+	return song, err
+
 }
