@@ -67,6 +67,12 @@ func encodeConvertAppleToSpotifyRequest(ctx context.Context, req *http.Request, 
 	return encodeRequest(ctx, req, request)
 }
 
+func encodeGetAppleJWTTokenRequest(ctx context.Context, req *http.Request, request interface{}) error {
+	// r.Methods("GET").Path("/getAppleJWTToken")
+	req.URL.Path = "/getAppleJWTToken"
+	return encodeRequest(ctx, req, request)
+}
+
 func decodeConvertSpotifyToAppleRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request convertSpotifyToAppleRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -90,11 +96,17 @@ func decodeConvertAppleToSpotifyResponse(_ context.Context, resp *http.Response)
 }
 
 func decodeGetAppleJWTTokenRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request AppleJWTTokenResponse
+	var request getAppleJWTTokenRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
 	return request, nil
+}
+
+func decodeGetAppleJWTTokenResponse(_ context.Context, resp *http.Response) (interface{}, error) {
+	var response getAppleJWTTokenResponse
+	err := json.NewDecoder(resp.Body).Decode(&response)
+	return response, err
 }
 
 func decodeConvertSpotifyToAppleResponse(_ context.Context, resp *http.Response) (interface{}, error) {

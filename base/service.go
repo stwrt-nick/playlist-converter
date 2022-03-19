@@ -15,7 +15,8 @@ type Service interface {
 	ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error)
 	// GetUsersPlaylistsSpotify(ctx context.Context, userID string) (res GetUsersPlaylistsSpotifyResponse, err error)
 	ConvertAppleToSpotify(ctx context.Context, req convertAppleToSpotifyRequest) (res convertAppleToSpotifyResponse, err error)
-	GetAppleJWTToken(ctx context.Context) (res AppleJWTTokenResponse, err error)
+	GetAppleJWTToken(ctx context.Context, req getAppleJWTTokenRequest) (res getAppleJWTTokenResponse, err error)
+	// GetAppleSong(ctx context.Context, req getAppleSongRequest) (res getAppleSongResponse, err error)
 }
 
 var (
@@ -74,7 +75,8 @@ func (s *baseService) ConvertAppleToSpotify(ctx context.Context, req convertAppl
 	return res, nil
 }
 
-func (s *baseService) GetAppleJWTToken(ctx context.Context) (res AppleJWTTokenResponse, err error) {
+func (s *baseService) GetAppleJWTToken(ctx context.Context, req getAppleJWTTokenRequest) (res getAppleJWTTokenResponse, err error) {
+	fmt.Println("79")
 	privateKey, err := privateKeyFromFile()
 	if err != nil {
 		log.Fatal(err)

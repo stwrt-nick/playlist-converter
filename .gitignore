@@ -3,3 +3,6 @@
 
 # In case you're in mac OS
 .DS_Store
+
+# Auth files
+*.p8

@@ -19,6 +19,7 @@ func MakeServerEndpoints(s Service) Endpoints {
 	return Endpoints{
 		ConvertSpotifyToAppleEndpoint: makeConvertSpotifyToAppleEndpoint(s),
 		ConvertAppleToSpotifyEndpoint: makeConvertAppleToSpotifyEndpoint(s),
+		GetAppleJWTTokenEndpoint:      makeGetAppleJWTTokenEndpoint(s),
 	}
 }
 
@@ -41,6 +42,7 @@ func MakeClientEndpoints(instance string) (Endpoints, error) {
 	return Endpoints{
 		ConvertSpotifyToAppleEndpoint: httptransport.NewClient("GET", tgt, encodeConvertSpotifyToAppleRequest, decodeConvertSpotifyToAppleResponse, options...).Endpoint(),
 		ConvertAppleToSpotifyEndpoint: httptransport.NewClient("GET", tgt, encodeConvertAppleToSpotifyRequest, decodeConvertAppleToSpotifyResponse, options...).Endpoint(),
+		GetAppleJWTTokenEndpoint:      httptransport.NewClient("GET", tgt, encodeGetAppleJWTTokenRequest, decodeGetAppleJWTTokenResponse, options...).Endpoint(),
 	}, nil
 }
 
@@ -75,7 +77,8 @@ func makeConvertAppleToSpotifyEndpoint(s Service) endpoint.Endpoint {
 
 func makeGetAppleJWTTokenEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		p, e := s.GetAppleJWTToken(ctx)
-		return AppleJWTTokenResponse{JWTToken: p.JWTToken, Err: e}, nil
+		req := request.(getAppleJWTTokenRequest)
+		p, e := s.GetAppleJWTToken(ctx, req)
+		return getAppleJWTTokenResponse{JWTToken: p.JWTToken, Err: e}, nil
 	}
 }

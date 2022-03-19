@@ -18,6 +18,14 @@ type getAppleJWTTokenRequest struct {
 	Id string `json:"id"`
 }
 
+type getAppleSongRequest struct {
+	SongId string `json:"id"`
+}
+
+type getAppleSongResponse struct {
+	SongId string `json:"id"`
+}
+
 type convertAppleToSpotifyResponse struct {
 	Status string `json:"status"`
 	Err    error  `json:"err,omitempty"` // errors don't JSON-marshal, so we use a string
@@ -49,7 +57,7 @@ type SpotifyOAuthResponse struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-type AppleJWTTokenResponse struct {
+type getAppleJWTTokenResponse struct {
 	JWTToken string `json:"jwt_token"`
 	Err      error  `json:"err,omitempty"`
 }

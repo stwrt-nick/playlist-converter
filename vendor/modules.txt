@@ -18,6 +18,3 @@ github.com/gorilla/mux
 # github.com/joho/godotenv v1.4.0
 ## explicit; go 1.12
 github.com/joho/godotenv
-# github.com/minchao/go-apple-music v0.0.0-20210727003702-cefe2063f418
-## explicit; go 1.13
-github.com/minchao/go-apple-music/token
