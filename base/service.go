@@ -43,14 +43,14 @@ func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpot
 		return res, err
 	}
 
-	playlistTracks, err := GetPlaylistTracksSpotify(authToken, playlistId)
+	playlistTracksISRC, err := GetPlaylistTracksSpotify(authToken, playlistId)
 	if err != nil {
 		return res, err
 	}
 
 	i := 0
-	for i < len(playlistTracks) {
-		fmt.Println(playlistTracks[i])
+	for i < len(playlistTracksISRC) {
+		fmt.Println(playlistTracksISRC[i])
 		i++
 	}
 

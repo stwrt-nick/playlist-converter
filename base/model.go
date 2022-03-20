@@ -177,9 +177,9 @@ type Artists struct {
 }
 
 type ExternalIds struct {
-	isrc string `json:"isrc"`
-	ean  string `json:"ean"`
-	upc  string `json:"upc"`
+	Isrc string `json:"isrc"`
+	Ean  string `json:"ean"`
+	Upc  string `json:"upc"`
 }
 
 type LinkedFrom struct {

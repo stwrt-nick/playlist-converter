@@ -152,11 +152,10 @@ func GetPlaylistTracksSpotify(authToken string, playlistId string) (playlistTrac
 
 	unmarshalErr := json.Unmarshal(body, &tracksFromPlaylist)
 	if unmarshalErr != nil {
-		return playlistTracks, err
 	}
 
 	for _, items := range tracksFromPlaylist.Items {
-		playlistTracks = append(playlistTracks, items.Track.Name)
+		playlistTracks = append(playlistTracks, items.Track.ExternalIds.Isrc)
 	}
 
 	return playlistTracks, err
@@ -227,7 +226,7 @@ func GenerateAuthToken(privateKey *ecdsa.PrivateKey) (JWTToken string, err error
 
 }
 
-func GetAppleSong() (song string, err error) {
+func CreateApplePlaylist() (song string, err error) {
 	privateKey, err := privateKeyFromFile()
 	if err != nil {
 		log.Fatal(err)
@@ -241,8 +240,8 @@ func GetAppleSong() (song string, err error) {
 	client := &http.Client{}
 
 	req, err := http.NewRequest(
-		http.MethodGet,
-		"https://api.music.apple.com/v1/catalog/us/songs/203709340",
+		http.MethodPost,
+		"https://api.music.apple.com/v1/me/library/playlists",
 		nil,
 	)
 	if err != nil {
