@@ -1,13 +1,13 @@
 package base
 
 import (
+	"bytes"
 	"crypto/ecdsa"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -211,9 +211,6 @@ func GenerateAuthToken(privateKey *ecdsa.PrivateKey) (JWTToken string, err error
 		"exp": expirationTimestamp.Unix(),
 	})
 
-	fmt.Println(expirationTimestamp.Unix())
-	fmt.Println(now.Unix())
-
 	token.Header["alg"] = "ES256"
 	token.Header["kid"] = keyId
 
@@ -226,7 +223,84 @@ func GenerateAuthToken(privateKey *ecdsa.PrivateKey) (JWTToken string, err error
 
 }
 
-func CreateApplePlaylist() (song string, err error) {
+func CreateApplePlaylist(playlistTracksISRC []string, playlistName string) (status string, err error) {
+	var playlistSongIDs []string
+
+	i := 0
+	for i < 3 {
+		songId, err := GetAppleSongIDByISRC(playlistTracksISRC[i])
+		if err != nil {
+			log.Fatal(err)
+		}
+		playlistSongIDs = append(playlistSongIDs, songId)
+		i++
+	}
+
+	privateKey, err := privateKeyFromFile()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	authToken, err := GenerateAuthToken(privateKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	client := &http.Client{}
+
+	playlistAttributes := PlaylistAttributes{
+		Description: "",
+		Name:        playlistName,
+	}
+
+	playlistRelationships := []PlaylistData{
+		PlaylistData{
+			Id:   playlistSongIDs[0],
+			Type: "song",
+		},
+	}
+
+	jsonBody := ApplePlaylistRequest{
+		Attributes: playlistAttributes,
+		Data:       playlistRelationships,
+	}
+
+	body, _ := json.Marshal(jsonBody)
+
+	req, err := http.NewRequest(
+		http.MethodPost,
+		"https://api.music.apple.com/v1/me/library/playlists",
+		bytes.NewBuffer(body),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	req.Header.Set("Authorization", "Bearer "+authToken)
+	// req.Header.Set("User-Agent", "App Store Connect Client")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+
+	body, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var applePlaylistResponse ApplePlaylistResponse
+
+	unmarshalErr := json.Unmarshal(body, &applePlaylistResponse)
+	if unmarshalErr != nil {
+	}
+
+	return status, err
+
+}
+
+func GetAppleSongIDByISRC(isrc string) (songId string, err error) {
 	privateKey, err := privateKeyFromFile()
 	if err != nil {
 		log.Fatal(err)
@@ -240,8 +314,8 @@ func CreateApplePlaylist() (song string, err error) {
 	client := &http.Client{}
 
 	req, err := http.NewRequest(
-		http.MethodPost,
-		"https://api.music.apple.com/v1/me/library/playlists",
+		http.MethodGet,
+		"https://api.music.apple.com/v1/catalog/us/songs?filter[isrc]="+isrc,
 		nil,
 	)
 	if err != nil {
@@ -262,13 +336,13 @@ func CreateApplePlaylist() (song string, err error) {
 		log.Fatal(err)
 	}
 
-	var applePlaylistResponse ApplePlaylistResponse
+	var appleSongIdResponse GetAppleSongIDByISRCResponse
 
-	unmarshalErr := json.Unmarshal(body, &applePlaylistResponse)
+	unmarshalErr := json.Unmarshal(body, &appleSongIdResponse)
 	if unmarshalErr != nil {
-		panic(err)
 	}
 
-	return song, err
+	songId = appleSongIdResponse.Data[0].Id
 
+	return songId, err
 }

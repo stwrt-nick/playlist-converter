@@ -48,23 +48,22 @@ func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpot
 		return res, err
 	}
 
-	i := 0
-	for i < len(playlistTracksISRC) {
-		fmt.Println(playlistTracksISRC[i])
-		i++
+	status, err := CreateApplePlaylist(playlistTracksISRC, req.PlaylistName)
+	if err != nil {
+		return res, err
 	}
 
-	if playlistId != "" {
+	if status != "" {
 		res = convertSpotifyToAppleResponse{
-			Status: playlistId,
+			Status: status,
 			Err:    nil,
 		}
 	}
 
-	if req.Id == "" {
+	if status == "" {
 		res = convertSpotifyToAppleResponse{
 			Status: "failed",
-			Err:    errors.New("no id found"),
+			Err:    errors.New("request failed"),
 		}
 	}
 

@@ -63,7 +63,89 @@ type getAppleJWTTokenResponse struct {
 }
 
 type ApplePlaylistResponse struct {
-	Song string `json:"song`
+	Data []PlaylistResponseData `json:"data"`
+}
+
+type PlaylistResponseData struct {
+	Id         string                     `json:"id"`
+	Type       string                     `json:"type"`
+	Href       string                     `json:"href"`
+	Attributes PlaylistResponseAttributes `json:"attributes"`
+}
+
+type PlaylistResponseAttributes struct {
+	HasCatalog  bool        `json:"hasCatalog"`
+	Description Description `json:"description"`
+	Name        string      `json:"name"`
+	CanEdit     bool        `json:"canEdit"`
+	IsPublic    bool        `json:"isPublic"`
+	PlayParams  PlayParams  `json:"playParams"`
+	DateAdded   string      `json:"dateAdded"`
+}
+
+type PlayParams struct {
+	Id        string `json:"id"`
+	Kind      string `json:"kind"`
+	IsLibrary bool   `json:"isLibrary"`
+}
+
+type Description struct {
+	Standard string `json:"standard"`
+}
+
+type ApplePlaylistRequest struct {
+	Attributes PlaylistAttributes `json:"attributes"`
+	Data       []PlaylistData     `json:"data"`
+}
+
+type PlaylistData struct {
+	Id   string `json:"id"`
+	Type string `json:"type"`
+}
+
+type PlaylistAttributes struct {
+	Description string `json:"description"`
+	Name        string `json:"name"`
+}
+
+type GetAppleSongIDByISRCResponse struct {
+	Data []Data `json:"data"`
+}
+
+type Data struct {
+	Id         string     `json:"id"`
+	Type       string     `json:"type"`
+	Href       string     `json:"href"`
+	Attributes Attributes `json:"attributes"`
+}
+
+type Attributes struct {
+	Previews         []Previews `json:"previews"`
+	Artwork          Artwork    `json:"artwork"`
+	ArtistName       string     `json:"artistName"`
+	Url              string     `json:"url"`
+	DiscNumber       string     `json:"discNumber"`
+	GenreNames       []string   `json:"genreNames"`
+	DurationInMillis int        `json:"durationInMillis"`
+	ReleaseDate      string     `json:"releaseDate"`
+	Name             string     `json:"name"`
+	ISRC             string     `json:"isrc"`
+	HasLyrics        bool       `json:"hasLyrics"`
+}
+
+type Previews struct {
+	Url string `json:"url"`
+}
+
+type Artwork struct {
+	Width      string `json:"width"`
+	Height     string `json:"height"`
+	Url        string `json:"url"`
+	BgColor    string `json:"bgColor"`
+	TextColor1 string `json:"textColor1"`
+	TextColor2 string `json:"textColor2"`
+	TextColor3 string `json:"textColor3"`
+	TextColor4 string `json:"textColor4"`
 }
 
 type Playlist struct {
