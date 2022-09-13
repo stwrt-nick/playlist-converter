@@ -8,17 +8,17 @@ import (
 
 	"sync"
 
-	"github.com/stwrt-nick/playlist-converter/api"
-	"github.com/stwrt-nick/playlist-converter/model"
+	"playlist-converter/api"
+	"playlist-converter/model"
 )
 
 type service struct{}
 
 type Service interface {
-	ConvertSpotifyToApple(ctx context.Context, req model.convertSpotifyToAppleRequest) (res model.convertSpotifyToAppleResponse, err error)
+	ConvertSpotifyToApple(ctx context.Context, req model.ConvertSpotifyToAppleRequest) (res model.ConvertSpotifyToAppleResponse, err error)
 	// GetUsersPlaylistsSpotify(ctx context.Context, userID string) (res GetUsersPlaylistsSpotifyResponse, err error)
-	ConvertAppleToSpotify(ctx context.Context, req model.convertAppleToSpotifyRequest) (res model.convertAppleToSpotifyResponse, err error)
-	GetAppleJWTToken(ctx context.Context, req model.getAppleJWTTokenRequest) (res model.getAppleJWTTokenResponse, err error)
+	ConvertAppleToSpotify(ctx context.Context, req model.ConvertAppleToSpotifyRequest) (res model.ConvertAppleToSpotifyResponse, err error)
+	GetAppleJWTToken(ctx context.Context, req model.GetAppleJWTTokenRequest) (res model.GetAppleJWTTokenResponse, err error)
 	// GetAppleSong(ctx context.Context, req getAppleSongRequest) (res getAppleSongResponse, err error)
 }
 
@@ -36,7 +36,7 @@ func NewBaseService() Service {
 	return &baseService{}
 }
 
-func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error) {
+func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req model.ConvertSpotifyToAppleRequest) (res model.ConvertSpotifyToAppleResponse, err error) {
 	authToken, err := api.GetSpotifyAuthToken()
 	if err != nil {
 		return res, err
@@ -57,14 +57,14 @@ func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpot
 	}
 
 	if status != "" {
-		res = model.convertSpotifyToAppleResponse{
+		res = model.ConvertSpotifyToAppleResponse{
 			Status: status,
 			Err:    nil,
 		}
 	}
 
 	if status == "" {
-		res = convertSpotifyToAppleResponse{
+		res = model.ConvertSpotifyToAppleResponse{
 			Status: "failed",
 			Err:    errors.New("request failed"),
 		}
@@ -73,13 +73,13 @@ func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpot
 	return res, nil
 }
 
-func (s *baseService) ConvertAppleToSpotify(ctx context.Context, req model.convertAppleToSpotifyRequest) (res model.convertAppleToSpotifyResponse, err error) {
+func (s *baseService) ConvertAppleToSpotify(ctx context.Context, req model.ConvertAppleToSpotifyRequest) (res model.ConvertAppleToSpotifyResponse, err error) {
 	return res, nil
 }
 
-func (s *baseService) GetAppleJWTToken(ctx context.Context, req model.getAppleJWTTokenRequest) (res model.getAppleJWTTokenResponse, err error) {
+func (s *baseService) GetAppleJWTToken(ctx context.Context, req model.GetAppleJWTTokenRequest) (res model.GetAppleJWTTokenResponse, err error) {
 	fmt.Println("79")
-	privateKey, err := api.privateKeyFromFile()
+	privateKey, err := api.PrivateKeyFromFile()
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -3,6 +3,7 @@ package base
 import (
 	"context"
 	"net/url"
+	"playlist-converter/model"
 	"strings"
 
 	"github.com/go-kit/kit/endpoint"
@@ -46,14 +47,14 @@ func MakeClientEndpoints(instance string) (Endpoints, error) {
 	}, nil
 }
 
-func (e Endpoints) ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error) {
-	request := convertAppleToSpotifyRequest{Id: req.Id}
+func (e Endpoints) ConvertSpotifyToApple(ctx context.Context, req model.ConvertSpotifyToAppleRequest) (res model.ConvertSpotifyToAppleResponse, err error) {
+	request := model.ConvertAppleToSpotifyRequest{Id: req.Id}
 	response, err := e.ConvertSpotifyToAppleEndpoint(ctx, request)
 	if err != nil {
-		return convertSpotifyToAppleResponse{}, err
+		return model.ConvertSpotifyToAppleResponse{}, err
 	}
-	resp := response.(convertSpotifyToAppleResponse)
-	return convertSpotifyToAppleResponse{
+	resp := response.(model.ConvertSpotifyToAppleResponse)
+	return model.ConvertSpotifyToAppleResponse{
 		Status: resp.Status,
 		Err:    resp.Err,
 	}, nil
@@ -61,24 +62,24 @@ func (e Endpoints) ConvertSpotifyToApple(ctx context.Context, req convertSpotify
 
 func makeConvertSpotifyToAppleEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req := request.(convertSpotifyToAppleRequest)
+		req := request.(model.ConvertSpotifyToAppleRequest)
 		p, e := s.ConvertSpotifyToApple(ctx, req)
-		return convertSpotifyToAppleResponse{Status: p.Status, Err: e}, nil
+		return model.ConvertSpotifyToAppleResponse{Status: p.Status, Err: e}, nil
 	}
 }
 
 func makeConvertAppleToSpotifyEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req := request.(convertAppleToSpotifyRequest)
+		req := request.(model.ConvertAppleToSpotifyRequest)
 		p, e := s.ConvertAppleToSpotify(ctx, req)
-		return convertAppleToSpotifyResponse{Status: p.Status, Err: e}, nil
+		return model.ConvertAppleToSpotifyResponse{Status: p.Status, Err: e}, nil
 	}
 }
 
 func makeGetAppleJWTTokenEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req := request.(getAppleJWTTokenRequest)
+		req := request.(model.GetAppleJWTTokenRequest)
 		p, e := s.GetAppleJWTToken(ctx, req)
-		return getAppleJWTTokenResponse{JWTToken: p.JWTToken, Err: e}, nil
+		return model.GetAppleJWTTokenResponse{JWTToken: p.JWTToken, Err: e}, nil
 	}
 }

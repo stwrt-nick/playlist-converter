@@ -2,6 +2,7 @@ package base
 
 import (
 	"context"
+	"playlist-converter/model"
 	"time"
 
 	"github.com/go-kit/log"
@@ -24,21 +25,21 @@ type loggingMiddleware struct {
 	logger log.Logger
 }
 
-func (mw loggingMiddleware) ConvertAppleToSpotify(ctx context.Context, req convertAppleToSpotifyRequest) (res convertAppleToSpotifyResponse, err error) {
+func (mw loggingMiddleware) ConvertAppleToSpotify(ctx context.Context, req model.ConvertAppleToSpotifyRequest) (res model.ConvertAppleToSpotifyResponse, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log("method", "convertAppleToSpotify", "id", req.Id, "took", time.Since(begin), "err", err)
 	}(time.Now())
 	return mw.next.ConvertAppleToSpotify(ctx, req)
 }
 
-func (mw loggingMiddleware) ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error) {
+func (mw loggingMiddleware) ConvertSpotifyToApple(ctx context.Context, req model.ConvertSpotifyToAppleRequest) (res model.ConvertSpotifyToAppleResponse, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log("method", "convertSpotifyToApple", "id", req.Id, "took", time.Since(begin), "err", err)
 	}(time.Now())
 	return mw.next.ConvertSpotifyToApple(ctx, req)
 }
 
-func (mw loggingMiddleware) GetAppleJWTToken(ctx context.Context, req getAppleJWTTokenRequest) (res getAppleJWTTokenResponse, err error) {
+func (mw loggingMiddleware) GetAppleJWTToken(ctx context.Context, req model.GetAppleJWTTokenRequest) (res model.GetAppleJWTTokenResponse, err error) {
 	defer func(begin time.Time) {
 		mw.logger.Log("method", "getAppleJWTToken", "took", time.Since(begin), "err", err)
 	}(time.Now())

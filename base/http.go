@@ -7,6 +7,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"playlist-converter/model"
 
 	"github.com/gorilla/mux"
 
@@ -74,7 +75,7 @@ func encodeGetAppleJWTTokenRequest(ctx context.Context, req *http.Request, reque
 }
 
 func decodeConvertSpotifyToAppleRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request convertSpotifyToAppleRequest
+	var request model.ConvertSpotifyToAppleRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
@@ -82,7 +83,7 @@ func decodeConvertSpotifyToAppleRequest(_ context.Context, r *http.Request) (int
 }
 
 func decodeConvertAppleToSpotifyRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request convertAppleToSpotifyRequest
+	var request model.ConvertAppleToSpotifyRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
@@ -90,13 +91,13 @@ func decodeConvertAppleToSpotifyRequest(_ context.Context, r *http.Request) (int
 }
 
 func decodeConvertAppleToSpotifyResponse(_ context.Context, resp *http.Response) (interface{}, error) {
-	var response convertAppleToSpotifyResponse
+	var response model.ConvertAppleToSpotifyResponse
 	err := json.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }
 
 func decodeGetAppleJWTTokenRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request getAppleJWTTokenRequest
+	var request model.GetAppleJWTTokenRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
@@ -104,13 +105,13 @@ func decodeGetAppleJWTTokenRequest(_ context.Context, r *http.Request) (interfac
 }
 
 func decodeGetAppleJWTTokenResponse(_ context.Context, resp *http.Response) (interface{}, error) {
-	var response getAppleJWTTokenResponse
+	var response model.GetAppleJWTTokenResponse
 	err := json.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }
 
 func decodeConvertSpotifyToAppleResponse(_ context.Context, resp *http.Response) (interface{}, error) {
-	var response convertSpotifyToAppleResponse
+	var response model.ConvertSpotifyToAppleResponse
 	err := json.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }

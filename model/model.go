@@ -1,20 +1,20 @@
 package model
 
-type convertSpotifyToAppleRequest struct {
+type ConvertSpotifyToAppleRequest struct {
 	Id           string `json:"id"`
 	PlaylistName string `json:"playlistName"`
 }
 
-type convertSpotifyToAppleResponse struct {
+type ConvertSpotifyToAppleResponse struct {
 	Status string `json:"status"`
 	Err    error  `json:"err,omitempty"` // errors don't JSON-marshal, so we use a string
 }
 
-type convertAppleToSpotifyRequest struct {
+type ConvertAppleToSpotifyRequest struct {
 	Id string `json:"id"`
 }
 
-type getAppleJWTTokenRequest struct {
+type GetAppleJWTTokenRequest struct {
 	Id string `json:"id"`
 }
 
@@ -22,11 +22,11 @@ type getAppleSongRequest struct {
 	SongId string `json:"id"`
 }
 
-type getAppleSongResponse struct {
+type GetAppleSongResponse struct {
 	SongId string `json:"id"`
 }
 
-type convertAppleToSpotifyResponse struct {
+type ConvertAppleToSpotifyResponse struct {
 	Status string `json:"status"`
 	Err    error  `json:"err,omitempty"` // errors don't JSON-marshal, so we use a string
 }
@@ -57,7 +57,7 @@ type SpotifyOAuthResponse struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-type getAppleJWTTokenResponse struct {
+type GetAppleJWTTokenResponse struct {
 	JWTToken string `json:"jwt_token"`
 	Err      error  `json:"err,omitempty"`
 }

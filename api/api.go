@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"playlist-converter/model"
 
 	"strings"
 	"time"
@@ -161,7 +162,7 @@ func GetPlaylistTracksSpotify(authToken string, playlistId string) (playlistTrac
 	return playlistTracks, err
 }
 
-func privateKeyFromFile() (privateKey *ecdsa.PrivateKey, err error) {
+func PrivateKeyFromFile() (privateKey *ecdsa.PrivateKey, err error) {
 
 	err = godotenv.Load("credentials.env")
 	if err != nil {
@@ -236,7 +237,7 @@ func CreateApplePlaylist(playlistTracksISRC []string, playlistName string) (stat
 		i++
 	}
 
-	privateKey, err := privateKeyFromFile()
+	privateKey, err := PrivateKeyFromFile()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -248,19 +249,19 @@ func CreateApplePlaylist(playlistTracksISRC []string, playlistName string) (stat
 
 	client := &http.Client{}
 
-	playlistAttributes := PlaylistAttributes{
+	playlistAttributes := model.PlaylistAttributes{
 		Description: "",
 		Name:        playlistName,
 	}
 
-	playlistRelationships := []PlaylistData{
-		PlaylistData{
+	playlistRelationships := []model.PlaylistData{
+		model.PlaylistData{
 			Id:   playlistSongIDs[0],
 			Type: "song",
 		},
 	}
 
-	jsonBody := ApplePlaylistRequest{
+	jsonBody := model.ApplePlaylistRequest{
 		Attributes: playlistAttributes,
 		Data:       playlistRelationships,
 	}
@@ -290,7 +291,7 @@ func CreateApplePlaylist(playlistTracksISRC []string, playlistName string) (stat
 		log.Fatal(err)
 	}
 
-	var applePlaylistResponse ApplePlaylistResponse
+	var applePlaylistResponse model.ApplePlaylistResponse
 
 	unmarshalErr := json.Unmarshal(body, &applePlaylistResponse)
 	if unmarshalErr != nil {
@@ -301,7 +302,7 @@ func CreateApplePlaylist(playlistTracksISRC []string, playlistName string) (stat
 }
 
 func GetAppleSongIDByISRC(isrc string) (songId string, err error) {
-	privateKey, err := privateKeyFromFile()
+	privateKey, err := PrivateKeyFromFile()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -336,7 +337,7 @@ func GetAppleSongIDByISRC(isrc string) (songId string, err error) {
 		log.Fatal(err)
 	}
 
-	var appleSongIdResponse GetAppleSongIDByISRCResponse
+	var appleSongIdResponse model.GetAppleSongIDByISRCResponse
 
 	unmarshalErr := json.Unmarshal(body, &appleSongIdResponse)
 	if unmarshalErr != nil {
