@@ -9,15 +9,16 @@ import (
 	"sync"
 
 	"github.com/stwrt-nick/playlist-converter/api"
+	"github.com/stwrt-nick/playlist-converter/model"
 )
 
 type service struct{}
 
 type Service interface {
-	ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error)
+	ConvertSpotifyToApple(ctx context.Context, req model.convertSpotifyToAppleRequest) (res model.convertSpotifyToAppleResponse, err error)
 	// GetUsersPlaylistsSpotify(ctx context.Context, userID string) (res GetUsersPlaylistsSpotifyResponse, err error)
-	ConvertAppleToSpotify(ctx context.Context, req convertAppleToSpotifyRequest) (res convertAppleToSpotifyResponse, err error)
-	GetAppleJWTToken(ctx context.Context, req getAppleJWTTokenRequest) (res getAppleJWTTokenResponse, err error)
+	ConvertAppleToSpotify(ctx context.Context, req model.convertAppleToSpotifyRequest) (res model.convertAppleToSpotifyResponse, err error)
+	GetAppleJWTToken(ctx context.Context, req model.getAppleJWTTokenRequest) (res model.getAppleJWTTokenResponse, err error)
 	// GetAppleSong(ctx context.Context, req getAppleSongRequest) (res getAppleSongResponse, err error)
 }
 
@@ -56,7 +57,7 @@ func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpot
 	}
 
 	if status != "" {
-		res = convertSpotifyToAppleResponse{
+		res = model.convertSpotifyToAppleResponse{
 			Status: status,
 			Err:    nil,
 		}
@@ -72,11 +73,11 @@ func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpot
 	return res, nil
 }
 
-func (s *baseService) ConvertAppleToSpotify(ctx context.Context, req convertAppleToSpotifyRequest) (res convertAppleToSpotifyResponse, err error) {
+func (s *baseService) ConvertAppleToSpotify(ctx context.Context, req model.convertAppleToSpotifyRequest) (res model.convertAppleToSpotifyResponse, err error) {
 	return res, nil
 }
 
-func (s *baseService) GetAppleJWTToken(ctx context.Context, req getAppleJWTTokenRequest) (res getAppleJWTTokenResponse, err error) {
+func (s *baseService) GetAppleJWTToken(ctx context.Context, req model.getAppleJWTTokenRequest) (res model.getAppleJWTTokenResponse, err error) {
 	fmt.Println("79")
 	privateKey, err := api.privateKeyFromFile()
 	if err != nil {

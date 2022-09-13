@@ -1,4 +1,4 @@
-package base
+package api
 
 import (
 	"bytes"
@@ -70,7 +70,7 @@ func GetSpotifyAuthToken() (token string, err error) {
 		return token, err
 	}
 
-	var authResponse SpotifyOAuthResponse
+	var authResponse model.SpotifyOAuthResponse
 
 	unmarshalErr := json.Unmarshal(body, &authResponse)
 	if unmarshalErr != nil {
@@ -106,7 +106,7 @@ func GetPlaylistIdSpotify(authToken string, userId string, playlistName string) 
 		return playlistId, err
 	}
 
-	var playlistResponse SpotifyPlaylistResponse
+	var playlistResponse model.SpotifyPlaylistResponse
 
 	unmarshalErr := json.Unmarshal(body, &playlistResponse)
 	if unmarshalErr != nil {
@@ -148,7 +148,7 @@ func GetPlaylistTracksSpotify(authToken string, playlistId string) (playlistTrac
 		return playlistTracks, err
 	}
 
-	var tracksFromPlaylist GetPlaylistItems
+	var tracksFromPlaylist model.GetPlaylistItems
 
 	unmarshalErr := json.Unmarshal(body, &tracksFromPlaylist)
 	if unmarshalErr != nil {

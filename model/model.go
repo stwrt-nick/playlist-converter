@@ -1,4 +1,4 @@
-package base
+package model
 
 type convertSpotifyToAppleRequest struct {
 	Id           string `json:"id"`
