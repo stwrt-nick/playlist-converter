@@ -7,6 +7,8 @@ import (
 	"log"
 
 	"sync"
+
+	"github.com/stwrt-nick/playlist-converter/api"
 )
 
 type service struct{}
@@ -34,21 +36,21 @@ func NewBaseService() Service {
 }
 
 func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req convertSpotifyToAppleRequest) (res convertSpotifyToAppleResponse, err error) {
-	authToken, err := GetSpotifyAuthToken()
+	authToken, err := api.GetSpotifyAuthToken()
 	if err != nil {
 		return res, err
 	}
-	playlistId, err := GetPlaylistIdSpotify(authToken, req.Id, req.PlaylistName)
-	if err != nil {
-		return res, err
-	}
-
-	playlistTracksISRC, err := GetPlaylistTracksSpotify(authToken, playlistId)
+	playlistId, err := api.GetPlaylistIdSpotify(authToken, req.Id, req.PlaylistName)
 	if err != nil {
 		return res, err
 	}
 
-	status, err := CreateApplePlaylist(playlistTracksISRC, req.PlaylistName)
+	playlistTracksISRC, err := api.GetPlaylistTracksSpotify(authToken, playlistId)
+	if err != nil {
+		return res, err
+	}
+
+	status, err := api.CreateApplePlaylist(playlistTracksISRC, req.PlaylistName)
 	if err != nil {
 		return res, err
 	}
@@ -76,11 +78,11 @@ func (s *baseService) ConvertAppleToSpotify(ctx context.Context, req convertAppl
 
 func (s *baseService) GetAppleJWTToken(ctx context.Context, req getAppleJWTTokenRequest) (res getAppleJWTTokenResponse, err error) {
 	fmt.Println("79")
-	privateKey, err := privateKeyFromFile()
+	privateKey, err := api.privateKeyFromFile()
 	if err != nil {
 		log.Fatal(err)
 	}
-	authToken, err := GenerateAuthToken(privateKey)
+	authToken, err := api.GenerateAuthToken(privateKey)
 
 	res.JWTToken = authToken
 
