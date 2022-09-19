@@ -3,7 +3,6 @@ package base
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 
 	"sync"
@@ -56,17 +55,10 @@ func (s *baseService) ConvertSpotifyToApple(ctx context.Context, req model.Conve
 		return res, err
 	}
 
-	if status != "" {
-		res = model.ConvertSpotifyToAppleResponse{
-			Status: status,
-			Err:    nil,
-		}
-	}
-
 	if status == "" {
 		res = model.ConvertSpotifyToAppleResponse{
 			Status: "failed",
-			Err:    errors.New("request failed"),
+			Err:    errors.New("failed to create apple playlist"),
 		}
 	}
 
@@ -78,7 +70,6 @@ func (s *baseService) ConvertAppleToSpotify(ctx context.Context, req model.Conve
 }
 
 func (s *baseService) GetAppleJWTToken(ctx context.Context, req model.GetAppleJWTTokenRequest) (res model.GetAppleJWTTokenResponse, err error) {
-	fmt.Println("79")
 	privateKey, err := api.PrivateKeyFromFile()
 	if err != nil {
 		log.Fatal(err)

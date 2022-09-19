@@ -153,6 +153,7 @@ func GetPlaylistTracksSpotify(authToken string, playlistId string) (playlistTrac
 
 	unmarshalErr := json.Unmarshal(body, &tracksFromPlaylist)
 	if unmarshalErr != nil {
+		return playlistTracks, err
 	}
 
 	for _, items := range tracksFromPlaylist.Items {
@@ -295,6 +296,7 @@ func CreateApplePlaylist(playlistTracksISRC []string, playlistName string) (stat
 
 	unmarshalErr := json.Unmarshal(body, &applePlaylistResponse)
 	if unmarshalErr != nil {
+		log.Fatal(err)
 	}
 
 	return status, err
@@ -341,6 +343,7 @@ func GetAppleSongIDByISRC(isrc string) (songId string, err error) {
 
 	unmarshalErr := json.Unmarshal(body, &appleSongIdResponse)
 	if unmarshalErr != nil {
+		return songId, err
 	}
 
 	songId = appleSongIdResponse.Data[0].Id

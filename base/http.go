@@ -124,10 +124,6 @@ type errorer interface {
 	error() error
 }
 
-// encodeResponse is the common method to encode all response types to the
-// client. I chose to do it this way because, since we're using JSON, there's no
-// reason to provide anything more specific. It's certainly possible to
-// specialize on a per-response (per-method) basis.
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	if e, ok := response.(errorer); ok && e.error() != nil {
 		// Not a Go kit transport error, but a business-logic error.

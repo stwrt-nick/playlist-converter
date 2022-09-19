@@ -5,10 +5,13 @@ TODO
 In Spotify
 # get users playlists -- DONE
 # get playlist id by playlist name & user name -- DONE
-# get tracks by playlist id 
+# get tracks by playlist id -- DONE
 
 In Apple
-# get JWT Token
+# get JWT Token -- DONE
 # post tracks to playlist
 # name playlist
 # add playlist artworK?
+
+Product Lifecycle
+#
